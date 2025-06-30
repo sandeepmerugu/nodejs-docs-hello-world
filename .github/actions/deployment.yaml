@@ -1,4 +1,3 @@
-
 name: Deploy to Azure Web App using Key Vault
 
 on:
