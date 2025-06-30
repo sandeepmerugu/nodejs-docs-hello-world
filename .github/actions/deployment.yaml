@@ -1,1 +1,33 @@
 
+name: Deploy to Azure Web App using Key Vault
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Get WebApp Name from Key Vault
+        id: keyvault
+        uses: azure/get-keyvault-secrets@v1
+        with:
+          keyvault: the1stkv
+          secrets: FirstAkSwebApp
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ steps.keyvault.outputs.FirstAkSwebApp }}
+          package: .
